@@ -10,3 +10,8 @@ button{padding:.7rem;font-size:1rem;border:0;border-radius:8px;background:#006a4
 .card h3{margin:0 0 .3rem}.fare{float:right;font-size:1.3rem;font-weight:700;color:#006a4e}.stops{font-size:.85rem;color:#555}
 .none{background:#fff3cd;padding:1rem;border-radius:8px}.note{font-size:.85rem;color:#666}
 #map{height:320px;border-radius:12px;margin:1rem 0;display:none}.src{font-size:.75rem;color:#006a4e;display:block;text-align:right}
+#tabs{display:flex;gap:.3rem;justify-content:center;flex-wrap:wrap;background:#00553e;padding:.4rem}#tabs button{background:transparent;padding:.4rem .7rem}#tabs button.on{background:#f42a41}
+.click{cursor:pointer}.chip{background:#e3f2ec;color:#006a4e;margin:.2rem;padding:.4rem .7rem}#bq{margin-bottom:.5rem}
+.stoplist li{padding:.35rem 0;border-bottom:1px solid #0001}.fare.sm{font-size:.95rem}.change{margin:.5rem 0;padding:.4rem;background:#fff3cd;border-radius:6px}.back{background:#ddd;color:#000}
+#bmap #map{display:block}
+body.dark{background:#121816;color:#e6eee9}body.dark form,body.dark .card,body.dark .ac ul,body.dark input{background:#1e2724;color:#e6eee9}body.dark .stops,body.dark .note{color:#a9b5af}body.dark .none,body.dark .change{background:#3a3420;color:#f3e6b8}body.dark a{color:#7fd6b2}body.dark .ac li:hover,body.dark .ac li.on,body.dark .chip{background:#2a3a33;color:#bfe9d6}

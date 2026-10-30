@@ -1,14 +1,20 @@
 <!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ঢাকা বাস রুট ও ভাড়া খুঁজুন</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="style.css"></head><body>
 <header><h1>🚌 ঢাকা বাস রুট ও ভাড়া</h1><p>যাত্রা শুরু ও গন্তব্য লিখুন — কোন বাস যায় এবং আনুমানিক ভাড়া দেখুন</p></header>
-<main><form id="f" autocomplete="off">
+<nav id="tabs"><button data-v="search" class="on">🔍 খুঁজুন</button><button data-v="buses">🚌 সব বাস</button><button data-v="near">📍 কাছের স্টপ</button><button data-v="saved">⭐ সংরক্ষিত</button><button id="theme" title="থিম">🌓</button></nav>
+<main><div id="v-search" class="view"><form id="f" autocomplete="off">
 <label>কোথা থেকে<div class="ac"><input id="from" placeholder="যেমন: মিরপুর ১০ / Mirpur 10" required><ul></ul></div></label>
 <button type="button" id="swap" title="অদলবদল">⇅</button>
 <label>কোথায় যাবেন<div class="ac"><input id="to" placeholder="যেমন: মতিঝিল / Motijheel" required><ul></ul></div></label>
 <button type="submit">বাস খুঁজুন</button><p id="geo" class="note"></p></form>
 <div id="map"></div><p id="road" class="note"></p>
-<section id="out"></section>
+<section id="recent"></section><section id="out"></section></div>
+<div id="v-buses" class="view" hidden><input id="bq" placeholder="বাসের নাম বা স্টপ দিয়ে খুঁজুন"><p id="bcount" class="note"></p><div id="blist"></div></div>
+<div id="v-bus" class="view" hidden></div>
+<div id="v-near" class="view" hidden><p id="nstat" class="note"></p><div id="nlist"></div></div>
+<div id="v-saved" class="view" hidden></div>
+<div id="v-common">
 <p class="note">ভাড়ার নিয়ম: সরকারি প্রজ্ঞাপন (২২ সেপ্টেম্বর ২০২৬) অনুযায়ী ঢাকা মহানগরে বাসভাড়া প্রতি কিমি ৳২.৭০, সর্বনিম্ন ৳১০। "বিআরটিএ চার্ট" চিহ্নিত ভাড়া বিআরটিএ রুট চার্টের দূরত্ব থেকে হিসাব করা; "আনুমানিক দূরত্ব" চিহ্নিত ভাড়ার জন্য সরকারি চার্ট পাওয়া যায়নি। রুট ও স্টপের তথ্য পরিবর্তিত হতে পারে।</p>
 <p class="note">তথ্যসূত্র: busroutebd.com থেকে সংগৃহীত কমিউনিটি ডেটাসেট (imamhossain94/dhaka-city-local-bus-json-data), anupamasite.com ও busvara.talukdaracademy.com.bd-এর সাথে মিলিয়ে দেখা। বিস্তারিত SOURCES.md-তে।</p>
-<p class="note" id="stats"></p></main>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="data.js"></script><script src="app.js"></script></body></html>
+<p class="note" id="stats"></p><p class="note"><a href="https://github.com/SahinurDEV/dhaka-bus-routes/issues/new" target="_blank">ভুল তথ্য জানান</a></p></div></main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="data.js"></script><script src="app.js"></script><script src="more.js"></script></body></html>

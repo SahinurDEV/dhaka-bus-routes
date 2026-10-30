@@ -19,3 +19,6 @@ Fares: BRTA Dhaka city rate ≈ Tk 2.45/km, minimum Tk 10 (estimate only). Stop 
 
 ## Map
 - Leaflet + OpenStreetMap tiles. Road distance comes from the public OSRM demo router (router.project-osrm.org); if that fails, the straight-line distance is shown. The map distance is for information only; fares use the chart or the formula above.
+
+## App-style features (Oct 2026)
+The feature set (all buses list, per-bus stop list, one-change routes, nearby stops, saved/recent trips, share, dark theme, offline) is modelled on the public Play Store description of a Dhaka bus route app. The code, UI and data here are all original or from the sources above; nothing was copied from that app. Fares for one-change trips are the sum of the two legs, each calculated with the rule above. Metro Rail fares and timings are not included because no verified machine-readable official fare matrix or timetable was available.

@@ -32,7 +32,7 @@ ac(F);ac(T);
 document.getElementById("swap").onclick=()=>{[F.value,T.value]=[T.value,F.value];};
 // মানচিত্র
 let map,layer;
-function drawMap(a,b,seg){const el=document.getElementById("map"),road=document.getElementById("road");
+function drawMap(a,b,seg,elId){const el=document.getElementById("map"),road=document.getElementById("road");
  if(!window.L){road.textContent="মানচিত্র লোড করা যায়নি।";return;}
  el.style.display="block";if(!map){map=L.map(el);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap"}).addTo(map);}
  if(layer)layer.remove();layer=L.layerGroup().addTo(map);
@@ -48,7 +48,8 @@ function drawMap(a,b,seg){const el=document.getElementById("map"),road=document.
   L.geoJSON(g.geometry,{style:{color:"#006a4e",weight:5}}).addTo(layer);
   road.textContent=`বাসের পথ ধরে সড়ক দূরত্ব (OSRM): ${bnNum((g.distance/1000).toFixed(1))} কিমি`;})
  .catch(()=>{road.textContent=`সড়ক দূরত্ব পাওয়া যায়নি; সরলরেখায় দূরত্ব: ${bnNum(sl.toFixed(1))} কিমি`;});}
-document.getElementById("f").onsubmit=e=>{e.preventDefault();const a=resolve(F.value),b=resolve(T.value);
+document.getElementById("f").onsubmit=e=>{e.preventDefault();search(resolve(F.value),resolve(T.value));};
+function search(a,b){
  if(!a||!b){out.innerHTML=`<div class="none">দুঃখিত, ${!a?"যাত্রা শুরুর":"গন্তব্যের"} স্থানটি খুঁজে পাওয়া যায়নি। তালিকা থেকে একটি স্থান বাছাই করুন।</div>`;return;}
  if(a===b){out.innerHTML=`<div class="none">যাত্রা শুরু ও গন্তব্য একই স্থান।</div>`;return;}
  F.value=STOPS[a][0];T.value=STOPS[b][0];
@@ -62,11 +63,11 @@ document.getElementById("f").onsubmit=e=>{e.preventDefault();const a=resolve(F.v
   res.push({name:`বিআরটিএ অনুমোদিত রুট ${c.code}: ${c.name}`,seg,d,fare:fareOf(d),src:`বিআরটিএ চার্ট (${c.code})`,full:[ks[0],ks.at(-1)],ch:true,brta:true});}
  res.sort((x,y)=>(x.brta-y.brta)||(x.d-y.d));
  drawMap(a,b,res[0]&&res[0].seg);
- if(!res.length){out.innerHTML=`<div class="none">🚫 <b>${STOPS[a][0]}</b> থেকে <b>${STOPS[b][0]}</b> পর্যন্ত কোনো সরাসরি বাস পাওয়া যায়নি। কাছাকাছি কোনো বড় স্টপে (যেমন ফার্মগেট, গুলিস্তান, মহাখালী) নেমে বাস বদলানোর চেষ্টা করুন।</div>`;return;}
+ if(!res.length){if(window.noDirect&&noDirect(a,b))return;out.innerHTML=`<div class="none">🚫 <b>${STOPS[a][0]}</b> থেকে <b>${STOPS[b][0]}</b> পর্যন্ত কোনো সরাসরি বাস পাওয়া যায়নি। কাছাকাছি কোনো বড় স্টপে (যেমন ফার্মগেট, গুলিস্তান, মহাখালী) নেমে বাস বদলানোর চেষ্টা করুন।</div>`;return;}
  const nb=res.filter(x=>!x.brta).length;
  out.innerHTML=`<h2>${STOPS[a][0]} → ${STOPS[b][0]}: ${bnNum(nb)}টি সরাসরি বাস সার্ভিস</h2>`+res.map(o=>`<div class="card"><span class="fare">৳${bnNum(o.fare)}</span><h3>${o.name}</h3>
  <div>দূরত্ব: ${bnNum(o.d.toFixed(1))} কিমি · ${bnNum(o.seg.length-1)}টি স্টপ পর</div>
- <div class="stops">পথ: ${o.seg.map(s=>STOPS[s][0]).join(" → ")}</div><div class="stops">পূর্ণ রুট: ${STOPS[o.full[0]][0]} ↔ ${STOPS[o.full[1]][0]}</div><span class="src">ভাড়ার উৎস: ${o.src}</span></div>`).join("");};
+ <div class="stops">পথ: ${o.seg.map(s=>STOPS[s][0]).join(" → ")}</div><div class="stops">পূর্ণ রুট: ${STOPS[o.full[0]][0]} ↔ ${STOPS[o.full[1]][0]}</div><span class="src">ভাড়ার উৎস: ${o.src}</span></div>`).join("");if(window.afterSearch)afterSearch(a,b,res);}
 // বর্তমান অবস্থান
 const geo=document.getElementById("geo");
 if(navigator.geolocation){geo.textContent="আপনার বর্তমান অবস্থান খোঁজা হচ্ছে…";
