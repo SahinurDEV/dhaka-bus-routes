@@ -1,0 +1,11 @@
+body{font-family:"Noto Sans Bengali","Hind Siliguri",sans-serif;margin:0;background:#f3f6f4;color:#1d2b24}
+header{background:#006a4e;color:#fff;padding:1.2rem;text-align:center}header h1{margin:0 0 .3rem}
+main{max-width:720px;margin:1rem auto;padding:0 1rem}
+form{background:#fff;padding:1rem;border-radius:12px;box-shadow:0 2px 8px #0001;display:grid;gap:.7rem}
+label{font-weight:600}input{width:100%;box-sizing:border-box;padding:.7rem;font-size:1rem;border:1px solid #bbb;border-radius:8px;margin-top:.3rem}
+.ac{position:relative}.ac ul{position:absolute;z-index:5;left:0;right:0;background:#fff;margin:0;padding:0;list-style:none;border:1px solid #ccc;border-radius:8px;max-height:240px;overflow:auto}
+.ac ul:empty{display:none}.ac li{padding:.5rem .7rem;cursor:pointer;font-weight:400}.ac li:hover,.ac li.on{background:#e3f2ec}.ac li small{color:#777}
+button{padding:.7rem;font-size:1rem;border:0;border-radius:8px;background:#006a4e;color:#fff;cursor:pointer}#swap{background:#ddd;color:#000;justify-self:center;width:3rem;padding:.3rem}
+.card{background:#fff;border-left:5px solid #f42a41;padding:.8rem 1rem;border-radius:8px;margin:.7rem 0;box-shadow:0 1px 4px #0001}
+.card h3{margin:0 0 .3rem}.fare{float:right;font-size:1.3rem;font-weight:700;color:#006a4e}.stops{font-size:.85rem;color:#555}
+.none{background:#fff3cd;padding:1rem;border-radius:8px}.note{font-size:.85rem;color:#666}

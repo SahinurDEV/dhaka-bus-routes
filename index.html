@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ঢাকা বাস রুট ও ভাড়া খুঁজুন</title><link rel="stylesheet" href="style.css"></head><body>
+<header><h1>🚌 ঢাকা বাস রুট ও ভাড়া</h1><p>যাত্রা শুরু ও গন্তব্য লিখুন — কোন বাস যায় এবং আনুমানিক ভাড়া দেখুন</p></header>
+<main><form id="f" autocomplete="off">
+<label>কোথা থেকে<div class="ac"><input id="from" placeholder="যেমন: মিরপুর ১০ / Mirpur 10" required><ul></ul></div></label>
+<button type="button" id="swap" title="অদলবদল">⇅</button>
+<label>কোথায় যাবেন<div class="ac"><input id="to" placeholder="যেমন: মতিঝিল / Motijheel" required><ul></ul></div></label>
+<button type="submit">বাস খুঁজুন</button></form>
+<section id="out"></section>
+<p class="note">⚠️ সতর্কতা: সকল রুট ও স্টপের তথ্য আনুমানিক এবং বাস্তবের সাথে ভিন্ন হতে পারে। ভাড়া বিআরটিএ নির্ধারিত হার (প্রতি কিমি প্রায় ৳২.৪৫, সর্বনিম্ন ৳১০) অনুযায়ী আনুমানিক দূরত্ব থেকে হিসাব করা — প্রকৃত ভাড়া ভিন্ন হতে পারে।</p>
+<p class="note" id="stats"></p></main>
+<script src="data.js"></script><script src="app.js"></script></body></html>
