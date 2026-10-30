@@ -9,3 +9,4 @@ button{padding:.7rem;font-size:1rem;border:0;border-radius:8px;background:#006a4
 .card{background:#fff;border-left:5px solid #f42a41;padding:.8rem 1rem;border-radius:8px;margin:.7rem 0;box-shadow:0 1px 4px #0001}
 .card h3{margin:0 0 .3rem}.fare{float:right;font-size:1.3rem;font-weight:700;color:#006a4e}.stops{font-size:.85rem;color:#555}
 .none{background:#fff3cd;padding:1rem;border-radius:8px}.note{font-size:.85rem;color:#666}
+#map{height:320px;border-radius:12px;margin:1rem 0;display:none}.src{font-size:.75rem;color:#006a4e;display:block;text-align:right}
