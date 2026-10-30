@@ -6,7 +6,7 @@ function segInfo(r,a,b){const i=r.s.indexOf(a),j=r.s.indexOf(b);const seg=i<j?r.
  return{seg,d,fare:fareOf(d),src};}
 // ভিউ পরিবর্তন
 const mapEl=$("map"),homeOfMap=mapEl.parentNode,mapNext=mapEl.nextSibling;
-function show(v){document.querySelectorAll(".view").forEach(x=>x.hidden=x.id!=="v-"+v);
+function show(v){if(v!=="trip")stopTrip&&stopTrip();document.querySelectorAll(".view").forEach(x=>x.hidden=x.id!=="v-"+v);
  document.querySelectorAll("#tabs button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v||(v==="bus"&&b.dataset.v==="buses")));
  if(v==="search"&&mapEl.parentNode!==homeOfMap){homeOfMap.insertBefore(mapEl,mapNext);}
  setTimeout(()=>{if(typeof map!=="undefined"&&map)map.invalidateSize();},50);
@@ -54,7 +54,7 @@ window.noDirect=function(a,b){const fromA=new Map(),toB=new Map();
  <h3>২. ${ROUTES[o.j].bn} <small>৳${bnNum(o.s2.fare)}</small></h3><div class="stops">${o.s2.seg.map(s=>STOPS[s][0]).join(" → ")}</div><span class="src">ভাড়ার উৎস: ${o.s2.src}</span></div>`).join("");
  afterSearch(a,b,[]);return true;};
 // সাম্প্রতিক খোঁজ ও ট্রিপ সংরক্ষণ
-window.afterSearch=function(a,b){let rc=LS.get("recent",[]).filter(x=>!(x[0]===a&&x[1]===b));rc.unshift([a,b]);LS.set("recent",rc.slice(0,6));renderRecent();
+window.afterSearch=function(a,b,res){(res||[]).forEach((o,k)=>{const c=out.querySelectorAll(".card")[k];if(!c)return;const btn=document.createElement("button");btn.className="go";btn.textContent="▶ যাত্রা শুরু করুন";btn.onclick=()=>startTrip(o);c.appendChild(btn);});let rc=LS.get("recent",[]).filter(x=>!(x[0]===a&&x[1]===b));rc.unshift([a,b]);LS.set("recent",rc.slice(0,6));renderRecent();
  const bar=document.createElement("p");const t=[a,b];
  bar.innerHTML=`<button id="st">${has("savedTrips",t)?"★ ট্রিপ সংরক্ষিত":"☆ ট্রিপ সংরক্ষণ"}</button> <button id="shr">🔗 শেয়ার</button>`;out.prepend(bar);
  $("st").onclick=()=>{$("st").textContent=toggle("savedTrips",t)?"★ ট্রিপ সংরক্ষিত":"☆ ট্রিপ সংরক্ষণ";};
@@ -74,6 +74,27 @@ function renderNear(){const st=$("nstat");if(!navigator.geolocation){st.textCont
   $("nlist").innerHTML=near.map(([s,d])=>{const rs=ROUTES.map((r,i)=>[r,i]).filter(([r])=>r.s.includes(s));
    return `<div class="card"><h3>${STOPS[s][0]} <small>${bnNum(d.toFixed(1))} কিমি</small></h3><div class="stops">${bnNum(rs.length)}টি বাস: ${rs.map(([r,i])=>`<a href="#bus=${i}">${r.bn}</a>`).join(", ")||"—"}</div></div>`;}).join("");},
  ()=>{st.textContent="অবস্থান পাওয়া যায়নি বা অনুমতি দেওয়া হয়নি।";},{timeout:10000});}
+// যাত্রা চলাকালীন ভিউ
+let watchId=null;
+function stopTrip(){if(watchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(watchId);watchId=null;}
+function legFare(seg,k){if(k<=0)return null;const r={s:seg};const x=segInfo(r,seg[0],seg[k]);
+ const ch=chartDist(seg[0],seg[k],seg);return ch?x:{...x,fare:fareOf(x.d)};}
+function startTrip(o){stopTrip();show("trip");const v=$("v-trip"),seg=o.seg,a=seg[0],b=seg.at(-1);
+ const paint=k=>{const f=k>0?legFare(seg,k):null;const nxt=seg[Math.min(k+1,seg.length-1)];
+  v.innerHTML=`<button class="back">← ফলাফলে ফিরুন</button><h2>${o.name}</h2>
+  <div class="farebox"><div>মোট ভাড়া · ${STOPS[a][0]} → ${STOPS[b][0]}</div><b>৳${bnNum(o.fare)}</b><small>ভাড়ার উৎস: ${o.src} · ${bnNum(o.d.toFixed(1))} কিমি</small></div>
+  <p id="tstat" class="note">${k<0?"আপনার অবস্থান খোঁজা হচ্ছে… (অবস্থান না পেলে নিচের স্টপে চাপ দিয়ে বর্তমান স্টপ বেছে নিন)":`বর্তমান স্টপ: <b>${STOPS[seg[k]][0]}</b>${k<seg.length-1?` · পরের স্টপ: <b>${STOPS[nxt][0]}</b>`:" · আপনি গন্তব্যে পৌঁছেছেন"}`}</p>
+  ${f?`<p class="sofar">এ পর্যন্ত ভাড়া (${STOPS[a][0]} → ${STOPS[seg[k]][0]}): <b>৳${bnNum(f.fare)}</b> <small>${f.src}</small></p>`:""}
+  <ol class="stoplist trip">${seg.map((s,i)=>{const lf=i?legFare(seg,i):null;return `<li data-k="${i}" class="${i===k?"cur":i<k?"done":""}">${STOPS[s][0]}${lf?`<span class="fare sm">৳${bnNum(lf.fare)}</span>`:'<span class="fare sm">ওঠার স্টপ</span>'}</li>`}).join("")}</ol>
+  <p class="note">প্রতিটি স্টপের পাশে ওঠার স্টপ থেকে সেই স্টপ পর্যন্ত ভাড়া দেখানো হয়েছে।</p>`;
+  v.querySelector(".back").onclick=()=>{stopTrip();show("search");};
+  v.querySelectorAll("li[data-k]").forEach(li=>li.onclick=()=>{manual=true;paint(+li.dataset.k);});};
+ let manual=false;paint(-1);
+ if(navigator.geolocation)watchId=navigator.geolocation.watchPosition(p=>{if(manual)return;const {latitude:la,longitude:lo}=p.coords;
+  let k=0,bd=1e9;seg.forEach((s,i)=>{const d=hav(la,lo,STOPS[s][2],STOPS[s][3]);if(d<bd){bd=d;k=i;}});
+  if(bd>3){paint(0);$("tstat").textContent="আপনি এই রুট থেকে দূরে আছেন বলে মনে হচ্ছে; স্টপে চাপ দিয়ে বর্তমান স্টপ বেছে নিন।";return;}paint(k);},
+  ()=>{if(!manual){paint(0);$("tstat").textContent="অবস্থান পাওয়া যায়নি; স্টপে চাপ দিয়ে বর্তমান স্টপ বেছে নিন।";}},{enableHighAccuracy:true,timeout:15000});
+ else{paint(0);}}
 // লিংক/হ্যাশ রাউটিং
 function route(){const h=decodeURIComponent(location.hash.slice(1));
  if(h.startsWith("bus="))return renderBus(+h.slice(4));
